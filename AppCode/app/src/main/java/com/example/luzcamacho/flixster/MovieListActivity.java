@@ -22,8 +22,6 @@ public class MovieListActivity extends AppCompatActivity {
     public final static String API_BASE_URL = "https://api.themoviedb.org/3";
     // the parameter name for the API key
     public final static String API_KEY_PARAM = "api_key";
-    // the API key
-    public final static String API_KEY = "3d1749a21621bb72c0069b15c4db3c48";
     //TODO: Move this all into the R folder later (secure location)
 
     // tagging for all errors in this activity
@@ -53,7 +51,7 @@ public class MovieListActivity extends AppCompatActivity {
         String url = API_BASE_URL + "/configuration";
         //set up the request parameters
         RequestParams params = new RequestParams();
-        params.put(API_KEY_PARAM, API_KEY);
+        params.put(API_KEY_PARAM, getString(R.string.api_key));
         //execute a GET request, expect a JSON response
         Log.e("Debug: ", url);
         client.get(url, params, new JsonHttpResponseHandler()
