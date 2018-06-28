@@ -3,7 +3,6 @@ package com.example.luzcamacho.flixster;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,8 @@ import com.example.luzcamacho.flixster.models.GlideApp;
 import com.example.luzcamacho.flixster.models.Movie;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by luzcamacho on 6/27/18.
@@ -57,13 +58,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.tvOverview.setText(movie.getOverview());
 
         //build image url using the config object
-        Log.d("Debug", "size: " + config.getPosterSize() + " and base url: " + config.getImageBaseURL());
         String imageURL = config.getImageUrl(config.getPosterSize(), movie.getImagePath());
         //load the image using glide
-        Log.d("Debug", "Image URL: " + imageURL);
+        int radius = 30; // corner radius, higher value = more rounded
+        int margin = 10; // crop margin, set to 0 for corners with no crop
         GlideApp.with(context)
                 .load(imageURL)
                 .placeholder(R.drawable.flicks_movie_placeholder)
+                .transform(new RoundedCornersTransformation(radius, margin))
                 .error(R.drawable.flicks_movie_placeholder)
                 .into(holder.ivPosterImage);
 
