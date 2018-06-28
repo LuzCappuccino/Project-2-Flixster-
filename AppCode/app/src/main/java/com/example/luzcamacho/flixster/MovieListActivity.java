@@ -2,9 +2,12 @@ package com.example.luzcamacho.flixster;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.luzcamacho.flixster.models.Config;
 import com.example.luzcamacho.flixster.models.Movie;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -32,12 +35,15 @@ public class MovieListActivity extends AppCompatActivity {
 
     AsyncHttpClient client;
 
-    //base url for loading image
-    String ImageBaseURL;
-    //poster size for images
-    String PosterSize;
     //container with all movie info
     ArrayList<Movie> movies;
+    //set up recycler
+    RecyclerView rvMovies;
+    // set adapter wired to the recycler
+    MovieAdapter adapter;
+    //image config
+    Config config;
+
 
 
     @Override
@@ -49,6 +55,14 @@ public class MovieListActivity extends AppCompatActivity {
         client = new AsyncHttpClient();
         //calling our configuration method
         movies = new ArrayList<>();
+        //initialize the adapter, the array list cannot be reinitialized after this point
+        adapter = new MovieAdapter(movies);
+
+        //resolve reference from the recycler and connect layout manager and the adapter
+        rvMovies = (RecyclerView)findViewById(R.id.rvMovies);
+        rvMovies.setLayoutManager(new LinearLayoutManager(this));
+        rvMovies.setAdapter(adapter);
+
         getConfig();
     }
 
@@ -65,15 +79,13 @@ public class MovieListActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 //getting image base URL
                 try {
-                    JSONObject images = response.getJSONObject("images");
-                    //attempting to get the image base url
-                    ImageBaseURL = images.getString("secure_base_url");
-
-                    // attempting to get the expected poster size
-                    JSONArray PosterSizeOps = images.getJSONArray("poster_sizes");
-                    PosterSize = PosterSizeOps.optString(3, "w342");
+                    config = new Config(response);
                     //logging necessary info
-                    Log.i(tag, String.format("Config loaded with image url %s and poster size %s", ImageBaseURL, PosterSize));
+                    Log.i(tag, String.format("Config loaded with image url %s and poster size %s",
+                            config.getImageBaseURL(), config.getPosterSize()));
+                    //TODO: pass to the adapter
+                    adapter.setConfig(config);
+                    // get the now playing list
                     getNowPlaying();
                 } catch (JSONException e) {
                     logError("Failed parsing config", e, true);
@@ -104,6 +116,8 @@ public class MovieListActivity extends AppCompatActivity {
 
                     for(int i = 0; i < MovieResults.length(); i++){
                         movies.add(new Movie(MovieResults.getJSONObject(i)));
+                        // let the adapter know they were changes to our array list
+                        adapter.notifyItemInserted(movies.size() - 1);
                     }
                     Log.i(tag, String.format("Movie database initialized. Results: %s", MovieResults.length()));
                 } catch (JSONException e) {
