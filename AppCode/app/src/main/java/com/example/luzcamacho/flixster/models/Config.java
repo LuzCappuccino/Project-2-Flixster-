@@ -10,22 +10,22 @@ import org.json.JSONObject;
 
 public class Config {
     //base url for loading image
-    String ImageBaseURL;
+    static String ImageBaseURL;
     //poster size for images
-    String PosterSize;
+    static String PosterSize;
 
     public Config(JSONObject Object) throws JSONException {
         JSONObject images = Object.getJSONObject("images");
         //attempting to get the image base url
-        ImageBaseURL = images.getString("secure_base_url");
+        Config.ImageBaseURL = images.getString("secure_base_url");
 
         // attempting to get the expected poster size
         JSONArray PosterSizeOps = images.getJSONArray("poster_sizes");
-        PosterSize = PosterSizeOps.optString(3, "w342");
+        Config.PosterSize = PosterSizeOps.optString(3, "w342");
     }
 
     //helper function which produces the necessary image urls
-    public String getImageUrl(String size, String path) {
+    public static String getImageUrl(String size, String path) {
         //concetenate everything
         return String.format("%s%s%s", ImageBaseURL, size, path);
     }
@@ -35,7 +35,7 @@ public class Config {
         return ImageBaseURL;
     }
 
-    public String getPosterSize(){
+    public static String getPosterSize(){
         return PosterSize;
     }
 }

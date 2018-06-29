@@ -25,6 +25,7 @@
         android:layout_toRightOf="@+id/ivPoster"
         android:fontFamily="sans-serif"
         android:text="Movie Title"
+        android:textColor="#FFFFFF"
         android:textAppearance="@android:style/TextAppearance.Large" />
 
     <TextView
@@ -36,5 +37,6 @@
         android:layout_below="@+id/tvTitle"
         android:layout_toEndOf="@+id/ivPoster"
         android:layout_toRightOf="@+id/ivPoster"
+        android:textColor="#FFFFFF"
         android:text="Movie Overview" />
 </RelativeLayout>
