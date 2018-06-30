@@ -54,4 +54,13 @@
         android:layout_toRightOf="@+id/ivPosterClick"
         android:text="TextView"
         android:textColor="#FFF" />
+
+    <ImageView
+        android:id="@+id/ivBackdrop"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@android:color/black" />
+
 </RelativeLayout>
